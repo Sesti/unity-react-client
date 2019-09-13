@@ -1,4 +1,21 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Unity React Client
+
+This project serves as a home automation dashboard that communicate with a "Unity Server" entity.
+
+## Install
+
+To install 
+
+```
+npm install
+```
+
+To run 
+```
+npm start
+```
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) so you still have access to the dev capabilities.
 
 ## Available Scripts
 
