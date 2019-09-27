@@ -7,6 +7,7 @@ class WeatherModule extends Component {
 	constructor(props){
 		super( props );
 		this.state = {
+            isOpened: false,
 			data: {
 				temperature : 0,
 				temperatureMin : "",
@@ -22,7 +23,10 @@ class WeatherModule extends Component {
                 windSpeed : "",
 				city : "",
 			}
-		}
+        }
+        
+        this.closeWidget = this.closeWidget.bind(this);
+        this.openWidget = this.openWidget.bind(this);
 	}
 	
 	fetchData(){
@@ -32,7 +36,6 @@ class WeatherModule extends Component {
 				return response.json();
 			} )
 			.then( function ( json ){
-                console.log(json);
                 let obj = {
                     temperature : json.main.temp,
                     temperatureMin : json.main.temp_min,
@@ -67,28 +70,54 @@ class WeatherModule extends Component {
 	
 	componentWillUnmount(){
 		clearInterval(this.timerID);
-	}
+    }
+    
+    formatDate(timestamp){
+        const date = new Date(timestamp);
+        
+        return date.getHours() + ":" + date.getMinutes();
+    }
+
+    openWidget(){
+        this.setState({ isOpened: true });
+    }
+
+
+    closeWidget(){
+        this.setState({ isOpened: false });
+    }
 	
 	render(){
         const {temperature, temperatureMin, temperatureMax, humidity, sunrise, sunset, weatherId, weatherIcon, 
             weatherDescription, weatherMain, windDegrees, windSpeed, city } = this.state.data;
-		
-		return (
-            <div className="App-widget">
-				<WeatherIcon name="owm" className="weather-icon" iconId="200"/>
-				<div>{Math.round(temperatureMin)}&#176;</div>
-				<div>{Math.round(temperature)}&#176;</div>
-				<div>{Math.round(temperatureMax)}&#176;</div>
-                <div>{humidity}</div>
-                <div>{sunrise}</div>
-                <div>{sunset}</div>
-                <div>{weatherDescription}</div>
-                <div>{weatherMain}</div>
-                <div>{windDegrees}</div>
-                <div>{windSpeed}</div>
-				<div>{city}</div>
-            </div>
-		);
+        
+        if(this.state.isOpened){
+            return(
+                <div className="App-widget Opened" onClick={this.closeWidget}>
+                    <WeatherIcon name="owm" className="weather-icon" iconId="200"/>
+                    <div>{Math.round(temperatureMin)}&#176;</div>
+                    <div>{Math.round(temperature)}&#176;</div>
+                    <div>{Math.round(temperatureMax)}&#176;</div>
+                    <div>{humidity}</div>
+                    <div>{this.formatDate(sunrise)}</div>
+                    <div>{this.formatDate(sunset)}</div>
+                    <div>{weatherDescription}</div>
+                    <div>{weatherMain}</div>
+                    <div>{windDegrees}</div>
+                    <div>{windSpeed}</div>
+                    <div>{city}</div>
+                </div>         
+            );
+        }else{
+            return (
+                <div className="App-widget" onClick={this.openWidget}>
+                    <WeatherIcon name="owm" className="weather-icon" iconId="200"/>
+                    <div>{Math.round(temperatureMin)}&#176;</div>
+                    <div>{Math.round(temperature)}&#176;</div>
+                    <div>{Math.round(temperatureMax)}&#176;</div>
+                </div>
+            );
+        }
 	}
 }
 
